@@ -16,4 +16,4 @@ All datasets used in the experiments are publicly available.
 
 ## Results
 
-![mmnist Gif](./gifs/merged_mmnist.gif)
+![mmnist Gif](merged_mmnist.gif)
