@@ -17,15 +17,6 @@ All datasets used in the experiments are publicly available.
 ## Results
 
 
-First Header  | Second Header | Third Header |
- ------------ | :-----------: | -----------: |
-Content       |          *Long Cell*        ||
-Content       |   **Cell**    |         Cell |
-
-New section   |     More      |         Data |
-And more      | With an escaped '\|'         || 
-
-
-|:    Moving MNIST Results  :||||||
+|||||||||
 |  ---  |  ---   |   ---   |  ---   |   ---  |   ---   |  ---   | --- |
 |![](./gifs/mmnist0.gif)  |  ![](./gifs/mmnist1.gif) |  ![](./gifs/mmnist2.gif) |  ![](./gifs/mmnist3.gif) |![](./gifs/mmnist4.gif) |![](./gifs/mmnist5.gif)  |  ![](./gifs/mmnist6.gif) |  ![](./gifs/mmnist7.gif)|
