@@ -17,5 +17,5 @@ All datasets used in the experiments are publicly available.
 ## Results
 
 ![](./gifs/merged_mmnist.gif)
-![](./gifs/kth_lowdpi.gif)
+![](./gifs/kth_lowpdi.gif)
 ![](./gifs/merged_mazes_lowdpi.gif)
