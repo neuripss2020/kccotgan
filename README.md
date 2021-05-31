@@ -18,6 +18,6 @@ All datasets used in the experiments are publicly available.
 
 ![mmnist Gif](./gifs/merged_mmnist.gif)
 
-Solarized dark             |  Solarized Ocean
-:-------------------------:|:-------------------------:
-![](./gifs/mmnist0.gif)  |  ![](./gifs/mmnist1.gif)
+Solarized dark             |  Solarized Ocean | Solarized dark             |  Solarized Ocean
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+![](./gifs/mmnist0.gif)  |  ![](./gifs/mmnist1.gif) |  ![](./gifs/mmnist2.gif) |  ![](./gifs/mmnist3.gif) |  ![](./gifs/mmnist4.gif)
