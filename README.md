@@ -29,6 +29,6 @@ All datasets used in the experiments are publicly available.
 
 
 
-|                                        ||||||||
+|       |        |||||||
 |  ---  |  ---   |   ---   |  ---   |   ---  |   ---   |  ---   | --- |
 |![](./gifs/mazes0.gif)  |  ![](./gifs/mazes1.gif) |  ![](./gifs/mazes2.gif) |  ![](./gifs/mazes3.gif) |![](./gifs/mazes4.gif) |![](./gifs/mazes5.gif)  |  ![](./gifs/mazes6.gif) |  ![](./gifs/mazes7.gif)|
