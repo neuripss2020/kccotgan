@@ -17,7 +17,7 @@ All datasets used in the experiments are publicly available.
 ## Results
 
 | Header :|    |
-|--------------|
+|--------------:|
 | 0 | 1 |
 
 
