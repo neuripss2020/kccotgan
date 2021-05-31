@@ -16,7 +16,7 @@ All datasets used in the experiments are publicly available.
 
 ## Results
 
-|             |          Grouping           ||
+
 First Header  | Second Header | Third Header |
  ------------ | :-----------: | -----------: |
 Content       |          *Long Cell*        ||
