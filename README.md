@@ -16,9 +16,14 @@ All datasets used in the experiments are publicly available.
 
 ## Results
 
-| Header :|    |
-|--------------:|
-| 0 | 1 |
+|             |          Grouping           ||
+First Header  | Second Header | Third Header |
+ ------------ | :-----------: | -----------: |
+Content       |          *Long Cell*        ||
+Content       |   **Cell**    |         Cell |
+
+New section   |     More      |         Data |
+And more      | With an escaped '\|'         || 
 
 
 |:    Moving MNIST Results  :||||||
