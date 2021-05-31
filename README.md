@@ -16,5 +16,5 @@ All datasets used in the experiments are publicly available.
 
 ## Results
 
-|![](./gifs/mmnist0.gif)  |  ![](./gifs/mmnist1.gif) |  ![](./gifs/mmnist2.gif) |  ![](./gifs/mmnist3.gif) | 
-|![](./gifs/mmnist4.gif) |![](./gifs/mmnist5.gif)  |  ![](./gifs/mmnist6.gif) |  ![](./gifs/mmnist7.gif) |
+![](./gifs/mmnist0.gif)  |  ![](./gifs/mmnist1.gif) |  ![](./gifs/mmnist2.gif) |  ![](./gifs/mmnist3.gif) 
+![](./gifs/mmnist4.gif) |![](./gifs/mmnist5.gif)  |  ![](./gifs/mmnist6.gif) |  ![](./gifs/mmnist7.gif)
