@@ -16,7 +16,6 @@ All datasets used in the experiments are publicly available.
 
 ## Results
 
-Markdown | Less | Pretty
 --- | --- | ---
 *Still* | `renders` | **nicely**
 
