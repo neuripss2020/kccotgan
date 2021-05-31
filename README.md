@@ -2,8 +2,6 @@
 
 This repository contains an implementation and further details of Quantized Conditional COT-GAN (QCCOT-GAN).
 
-## Results 
-
 ## Data 
 
 All datasets used in the experiments are publicly available.  
@@ -16,6 +14,13 @@ All datasets used in the experiments are publicly available.
 
 ## Results
 
+The green border indicates input sequences, and the red border shows the QCCOT-GAN prediction conditioned on the input sequences. 
+
+### Moving MNIST results
 ![](./gifs/merged_mmnist.gif)
+
+### KTH human action results
 ![](./gifs/kth_lowpdi.gif)
+
+### GQN Mazes results
 ![](./gifs/merged_mazes_lowdpi.gif)
