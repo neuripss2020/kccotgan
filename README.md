@@ -20,3 +20,15 @@ All datasets used in the experiments are publicly available.
 |                                        ||||||||
 |  ---  |  ---   |   ---   |  ---   |   ---  |   ---   |  ---   | --- |
 |![](./gifs/mmnist0.gif)  |  ![](./gifs/mmnist1.gif) |  ![](./gifs/mmnist2.gif) |  ![](./gifs/mmnist3.gif) |![](./gifs/mmnist4.gif) |![](./gifs/mmnist5.gif)  |  ![](./gifs/mmnist6.gif) |  ![](./gifs/mmnist7.gif)|
+
+
+
+|                                        ||||||||
+|  ---  |  ---   |   ---   |  ---   |   ---  |   ---   |  ---   | --- |
+|![](./gifs/kth0.gif)  |  ![](./gifs/kth1.gif) |  ![](./gifs/kth2.gif) |  ![](./gifs/kth3.gif) |![](./gifs/kth4.gif) |![](./gifs/kth5.gif)  |  ![](./gifs/kth6.gif) |  ![](./gifs/kth7.gif)|
+
+
+
+|                                        ||||||||
+|  ---  |  ---   |   ---   |  ---   |   ---  |   ---   |  ---   | --- |
+|![](./gifs/mazes0.gif)  |  ![](./gifs/mazes1.gif) |  ![](./gifs/mazes2.gif) |  ![](./gifs/mazes3.gif) |![](./gifs/mazes4.gif) |![](./gifs/mazes5.gif)  |  ![](./gifs/mazes6.gif) |  ![](./gifs/mazes7.gif)|
