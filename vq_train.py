@@ -54,11 +54,8 @@ def train(args):
     # decaying learning rate scheme
     lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(initial_learning_rate=gen_lr, decay_steps=10000,
                                                                  decay_rate=0.985, staircase=True)
-    # Add gradient clipping before updates
     gen_optimiser = tf.keras.optimizers.Adam(lr_schedule)
     dischm_optimiser = tf.keras.optimizers.Adam(lr_schedule)
-    # gen_optimiser = tf.keras.optimizers.Adam(lr_schedule, beta_1=0.5, beta_2=0.9)
-    # dischm_optimiser = tf.keras.optimizers.Adam(lr_schedule, beta_1=0.5, beta_2=0.9)
 
     it_counts = 0
     disc_iters = 1
@@ -109,41 +106,23 @@ def train(args):
     z_height = x_height // 16
     z_width = x_width // 16
 
-    # Define a standard multivariate normal for (z1, z2, ..., zT) --> (y1, y2, ..., yT)
+    # Define a standard multivariate normal for (z1, z2, ..., zT)
     dist_z = tfp.distributions.Normal(0.0, 1.0)
 
     generator_type = args.generator
-    if generator_type == 'convLSTM' or generator_type == 'reg_convLSTM':
-        encoder = gan.VideoEncoderConvLSTM(batch_size, int_time_steps, pred_time_steps, g_state_size, x_width, x_height,
-                                           z_width, z_height, g_filter_size, bn=bn, nlstm=nlstm, nchannel=channels,
-                                           dropout=dp, rnn_dropout=rnn_dp, reg=regularization, cw=cw, period=encode_period)
-        decoder = gan.VideoDecoderConvLSTM(batch_size, int_time_steps, pred_time_steps, g_state_size, x_width, x_height,
-                                           z_width, z_height, g_filter_size, bn=bn, nlstm=nlstm, nchannel=channels,
-                                           dropout=dp, rnn_dropout=rnn_dp, output_activation=g_output_activation,
-                                           reg=regularization, cw=cw, period=decode_period)
-    elif generator_type == 'lstm+conv':
-        encoder = gan.VideoEncoder(batch_size, int_time_steps, pred_time_steps, g_state_size, x_width, x_height,
-                                     z_width, z_height, g_filter_size, bn=bn, nlstm=nlstm, nchannel=channels,
-                                     dropout=dp, rnn_dropout=rnn_dp, period=encode_period)
-        decoder = gan.VideoDecoder(batch_size, int_time_steps, pred_time_steps, g_state_size, x_width, x_height,
-                                   z_width, z_height, g_filter_size, bn=bn, nlstm=nlstm, nchannel=channels,
-                                   dropout=dp, rnn_dropout=rnn_dp, output_activation=g_output_activation,
-                                   period=decode_period)
-    else:
-        generator = gan.VideoAutoRegGenerator(batch_size, int_time_steps, pred_time_steps, g_state_size, x_width,
-                                              x_height, z_width, z_height, filter_size=g_filter_size,
-                                              bn=bn, nlstm=nlstm, nchannel=channels, generation_steps=generation_steps)
+    encoder = gan.VideoEncoderConvLSTM(batch_size, int_time_steps, pred_time_steps, g_state_size, x_width, x_height,
+                                       z_width, z_height, g_filter_size, bn=bn, nlstm=nlstm, nchannel=channels,
+                                       dropout=dp, rnn_dropout=rnn_dp, reg=regularization, cw=cw, period=encode_period)
+    decoder = gan.VideoDecoderConvLSTM(batch_size, int_time_steps, pred_time_steps, g_state_size, x_width, x_height,
+                                       z_width, z_height, g_filter_size, bn=bn, nlstm=nlstm, nchannel=channels,
+                                       dropout=dp, rnn_dropout=rnn_dp, output_activation=g_output_activation,
+                                       reg=regularization, cw=cw, period=decode_period)
 
     discriminator_h = gan.VideoDiscriminator(batch_size, total_time_steps, d_state_size, x_width, x_height, z_width,
                                              z_height, filter_size=d_filter_size, bn=bn, nchannel=channels)
     discriminator_m = gan.VideoDiscriminator(batch_size, total_time_steps, d_state_size, x_width, x_height, z_width,
                                              z_height, filter_size=d_filter_size, bn=bn, nchannel=channels)
-    '''
-    discriminator_h_bc = gan.VideoDiscriminator(batch_size, total_time_steps, d_state_size, x_width, x_height, z_width,
-                                                z_height, filter_size=d_filter_size, bn=bn, nchannel=channels)
-    discriminator_m_bc = gan.VideoDiscriminator(batch_size, total_time_steps, d_state_size, x_width, x_height, z_width,
-                                                z_height, filter_size=d_filter_size, bn=bn, nchannel=channels)
-    '''
+
     n_blocks = args.n_blocks
 
     quantiser = data_utils.Quantiser(n=n_blocks)
@@ -473,9 +452,7 @@ def train(args):
                                 decoder.save_weights("./trained/{}/{}_iter{}_decoder/".format(test, model_fn, it_counts))
                                 discriminator_h.save_weights("./trained/{}/{}_iter{}_h/".format(test, model_fn, it_counts))
                                 discriminator_m.save_weights("./trained/{}/{}_iter{}_m/".format(test, model_fn, it_counts))
-                            # load model
-                            # encoder_generation.load_weights("./trained/{}/{}_encoder/".format(test, model_fn))
-                            # decoder_generation.load_weights("./trained/{}/{}_decoder/".format(test, model_fn))
+           
                             prediction_loops = 2
                             preditions = []
                             inputs = real_inputs
