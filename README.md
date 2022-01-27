@@ -7,13 +7,13 @@ This repository contains an implementation and further details of kernel Conditi
 The green border indicates input sequences, and the red border shows the KCCOT-GAN prediction conditioned on the input sequences. 
 
 ### Moving MNIST results
-![](./gifs/merged_mmnist.gif)
+![](./gifs/mmnist.gif)
 
 ### GQN Mazes results
-![](./gifs/merged_mazes_lowdpi.gif)
+![](./gifs/mazes.gif)
 
 ### BAIR Push Small results
-![](./gifs/merged_mazes_lowdpi.gif)
+![](./gifs/bair.gif)
 
 
 ## Data 
