@@ -220,8 +220,8 @@ def train(args):
         hidden_z = dist_z.sample([batch_size, pred_time_steps // decode_period[-1], z_height, z_width, z_channels])
         with tf.GradientTape() as disc_tape:
             real_inp = tf.concat((real_in, real_pred), axis=2)
-            context_features, preds_features = context_encoder.call(real_inp)
-            fake_pred = decoder.call(context_features, preds_features, hidden_z)
+            preds_features = context_encoder.call(real_inp)
+            fake_pred = decoder.call(preds_features, hidden_z)
 
             real = tf.concat((real_in, real_pred), axis=2)
             fake = tf.concat((real_in, fake_pred), axis=2)
@@ -261,8 +261,8 @@ def train(args):
 
         with tf.GradientTape() as gen_tape:
             real_inp = tf.concat((real_in, real_pred), axis=2)
-            context_features, preds_features = context_encoder.call(real_inp)
-            fake_pred = decoder.call(context_features, preds_features, hidden_z)
+            preds_features = context_encoder.call(real_inp)
+            fake_pred = decoder.call(preds_features, hidden_z)
 
             real = tf.concat((real_in, real_pred), axis=2)
             fake = tf.concat((real_in, fake_pred), axis=2)
@@ -344,9 +344,9 @@ def train(args):
                             test_inputs = test_data[:, :, :int_time_steps, :, :]
 
                             for i in range(pred_time_steps):
-                                context_features, preds_features = context_encoder.call(test_inputs, training=False)
+                                preds_features = context_encoder.call(test_inputs, training=False)
                                 hidden_z = dist_z.sample([batch_size, 1, 4, 4, 128])
-                                preds = decoder.call(context_features, preds_features, hidden_z, training=False)
+                                preds = decoder.call(preds_features, hidden_z, training=False)
                                 test_inputs = tf.concat((test_inputs, preds), axis=2)
 
                         images = tf.reshape(test_inputs, [batch_size, x_height, x_width * total_time_steps, channels])
