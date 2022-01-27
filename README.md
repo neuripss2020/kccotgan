@@ -1,4 +1,4 @@
-# Quantized Conditional COT-GAN for Video Prediction
+# Conditional COT-GAN for Video Prediction with Kernel Smoothing
 
 This repository contains an implementation and further details of Quantized Conditional COT-GAN (QCCOT-GAN).
 
