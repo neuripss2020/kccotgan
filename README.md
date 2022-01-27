@@ -4,7 +4,7 @@ This repository contains an implementation and further details of kernel Conditi
 
 ## Results
 
-The green border indicates input sequences, and the red border shows the KCCOT-GAN prediction conditioned on the input sequences. 
+The green border indicates context sequences, and the red border shows the KCCOT-GAN predictions conditioned on the context sequences. 
 
 ### Moving MNIST results
 ![](./gifs/mmnist.gif)
