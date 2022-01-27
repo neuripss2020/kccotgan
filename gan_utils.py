@@ -121,7 +121,7 @@ def benchmark_sinkhorn(x, y, scaling_coef, epsilon=1.0, L=10, Lmin=10):
     return cost
 
 
-def compute_sinkhorn(x, y, hy, Mx, scaling_coef, hx=None, My=None, epsilon=1.0, L=10, bi_causal=False):
+def compute_sinkhorn(x, y, hy, Mx, scaling_coef, hx=None, My=None, epsilon=1.0, L=100, bi_causal=False):
     '''
     Given two emprical measures with n points each with locations x and y
     outputs an approximation of the OT cost with regularization parameter epsilon
@@ -201,71 +201,7 @@ def scale_invariante_martingale_regularization(M, reg_lam, scaling_coef):
     return pm
 
 
-def pullaway_loss(embeddings):
-    """
-    Pull Away loss calculation
-    :param embeddings: The embeddings to be orthogonalized for varied faces.
-                       Shape [batch_size, time_steps, embeddings_dim] or [batch_size, embeddings_dim]
-    :return: pull away term loss
-    """
-    # Euclidean norm of a matrix A [time_steps, embeddings_dim]
-    # ||A|| = sqrt{\sum_i \sum_j a_{ij}^2}
-    inp_shape = tf.shape(embeddings)
-    batch_size = inp_shape[0]
-    time_steps = inp_shape[1]
-    # f_batch_size = tf.cast(inp_shape[0], tf.float32)
-    if len(inp_shape) > 3:
-        embeddings = tf.reshape(embeddings, (batch_size, time_steps, -1))
-    batch_size = tf.cast(batch_size, tf.float32) + 1e-06
-
-    if len(tf.shape(embeddings)) == 3:
-        norm = tf.sqrt(tf.reduce_sum(tf.reduce_sum(tf.square(embeddings), -1, keepdims=True), -2, keepdims=True))
-        normalized_embeddings = embeddings / norm
-        a_times_b = tf.reduce_sum(tf.reduce_sum(tf.expand_dims(normalized_embeddings, 1)
-                                                * tf.expand_dims(normalized_embeddings, 0), -1), -1)
-        similarity = a_times_b ** 2
-        return (tf.reduce_sum(similarity) - batch_size) / (batch_size * (batch_size - 1.0))
-    else:
-        norm = tf.sqrt(tf.reduce_sum(tf.square(embeddings), -1, keepdims=True))
-        normalized_embeddings = embeddings / norm
-        a_times_b = tf.matmul(normalized_embeddings, normalized_embeddings, transpose_b=True)
-        similarity = a_times_b ** 2
-        return (tf.reduce_sum(similarity) - batch_size) / (batch_size * (batch_size - 1.0))
-
-
-def compute_mixed_sinkhorn_loss(f_real, f_fake, m_real, m_fake, h_fake, scaling_coef, sinkhorn_eps, sinkhorn_l,
-                                f_real_p, f_fake_p, m_real_p, h_real_p, h_fake_p, video=True):
-    '''
-    :param x and x'(f_real, f_real_p): real data of shape [batch size, time steps, features]
-    :param y and y'(f_fake, f_fake_p): fake data of shape [batch size, time steps, features]
-    :param h and h'(h_real, h_fake): h(y) of shape [batch size, time steps, J]
-    :param m and m'(m_real and m_fake): M(x) of shape [batch size, time steps, J]
-    :param scaling_coef: a scaling coefficient
-    :param sinkhorn_eps: Sinkhorn parameter - epsilon
-    :param sinkhorn_l: Sinkhorn parameter - the number of iterations
-    :return: final Sinkhorn loss(and actual number of sinkhorn iterations for monitoring the training process)
-    '''
-
-    if video:
-        f_real = tf.transpose(f_real, (0, 2, 1, 3, 4))
-        f_fake = tf.transpose(f_fake, (0, 2, 1, 3, 4))
-        f_real = tf.reshape(f_real, [f_real.shape[0], f_real.shape[1], -1])
-        f_fake = tf.reshape(f_fake, [f_fake.shape[0], f_fake.shape[1], -1])
-        f_real_p = tf.transpose(f_real_p, (0, 2, 1, 3, 4))
-        f_fake_p = tf.transpose(f_fake_p, (0, 2, 1, 3, 4))
-        f_real_p = tf.reshape(f_real_p, [f_real_p.shape[0], f_real_p.shape[1], -1])
-        f_fake_p = tf.reshape(f_fake_p, [f_fake_p.shape[0], f_fake_p.shape[1], -1])
-    loss_xy = compute_sinkhorn(f_real, f_fake, h_fake, m_real, scaling_coef, sinkhorn_eps, sinkhorn_l)
-    loss_xyp = compute_sinkhorn(f_real_p, f_fake_p, h_fake_p, m_real_p, scaling_coef, sinkhorn_eps, sinkhorn_l)
-    loss_xx = compute_sinkhorn(f_real, f_real_p, h_real_p, m_real, scaling_coef, sinkhorn_eps, sinkhorn_l)
-    loss_yy = compute_sinkhorn(f_fake, f_fake_p, h_fake_p, m_fake, scaling_coef, sinkhorn_eps, sinkhorn_l)
-
-    loss = loss_xy + loss_xyp - loss_xx - loss_yy
-
-    return loss
-
-
-def compute_sinkhorn_loss_no_mix(f_real, f_fake, scaling_coef, sinkhorn_eps, sinkhorn_l, h_fake, m_real, h_real,
+def compute_sinkhorn_loss(f_real, f_fake, scaling_coef, sinkhorn_eps, sinkhorn_l, h_fake, m_real, h_real,
                                  m_fake, video=True):
     '''
     :param x and x'(f_real, f_real_p): real data of shape [batch size, time steps, features]
@@ -289,76 +225,3 @@ def compute_sinkhorn_loss_no_mix(f_real, f_fake, scaling_coef, sinkhorn_eps, sin
     loss = 2.0 * loss_xy - loss_xx - loss_yy
 
     return loss
-
-
-def compute_sinkhorn_loss_bi_causal(f_real, f_fake, scaling_coef, sinkhorn_eps, sinkhorn_l, h_fake, m_real, h_real,
-                                    m_fake, video=True):
-    '''
-    :param x and x'(f_real, f_real_p): real data of shape [batch size, time steps, features]
-    :param y and y'(f_fake, f_fake_p): fake data of shape [batch size, time steps, features]
-    :param h and h'(h_real, h_fake): h(y) of shape [batch size, time steps, J]
-    :param m and m'(m_real and m_fake): M(x) of shape [batch size, time steps, J]
-    :param scaling_coef: a scaling coefficient
-    :param sinkhorn_eps: Sinkhorn parameter - epsilon
-    :param sinkhorn_l: Sinkhorn parameter - the number of iterations
-    :return: final Sinkhorn loss(and actual number of Sinkhorn iterations for monitoring the training process)
-    '''
-    if video:
-        f_real = tf.transpose(f_real, (0, 2, 1, 3, 4))
-        f_fake = tf.transpose(f_fake, (0, 2, 1, 3, 4))
-        f_real = tf.reshape(f_real, [f_real.shape[0], f_real.shape[1], -1])
-        f_fake = tf.reshape(f_fake, [f_fake.shape[0], f_fake.shape[1], -1])
-    loss_xy = compute_sinkhorn(f_real, f_fake, h_fake, m_real, scaling_coef, h_real, m_fake,
-                               sinkhorn_eps, sinkhorn_l, bi_causal=True)
-    loss_xx = compute_sinkhorn(f_real, f_real, h_real, m_real, scaling_coef, h_real, m_real,
-                               sinkhorn_eps, sinkhorn_l, bi_causal=True)
-    loss_yy = compute_sinkhorn(f_fake, f_fake, h_fake, m_fake, scaling_coef, h_fake, m_fake,
-                               sinkhorn_eps, sinkhorn_l, bi_causal=True)
-
-    loss = 2.0 * loss_xy - loss_xx - loss_yy
-
-    return loss
-
-
-def compute_mixed_benchmark_loss(x, y, scaling_coef, sinkhorn_eps, sinkhorn_l, xp=None, yp=None):
-    '''
-    :param x: real data of shape [batch size, time steps, features]
-    :param y: fake data of shape [batch size, time steps, features]
-    :param xp: second batch real data of shape [batch size, time steps, features]
-    :param yp: second batch fake data of shape [batch size, time steps, features]
-    :param scaling_coef: a scaling coefficient
-    :param sinkhorn_eps: Sinkhorn parameter - epsilon
-    :param sinkhorn_l: Sinkhorn parameter - the number of iterations
-    :return: final Sinkhorn loss(and actual number of sinkhorn iterations for monitoring the training process)
-    '''
-    if yp is None:
-        yp = y
-    if xp is None:
-        xp = x
-
-    loss_xyp = benchmark_sinkhorn(xp, yp, scaling_coef, sinkhorn_eps, sinkhorn_l)
-    loss_xy = benchmark_sinkhorn(x, y, scaling_coef, sinkhorn_eps, sinkhorn_l)
-    loss_xx = benchmark_sinkhorn(x, xp, scaling_coef, sinkhorn_eps, sinkhorn_l)
-    loss_yy = benchmark_sinkhorn(y, yp, scaling_coef, sinkhorn_eps, sinkhorn_l)
-
-    loss = loss_xy + loss_xyp - loss_xx - loss_yy
-
-    return loss
-
-
-def original_sinkhorn_loss(x, y, scaling_coef, sinkhorn_eps, sinkhorn_l):
-    '''
-    :param x: real data of shape [batch size, time steps, features]
-    :param y: fake data of shape [batch size, time steps, features]
-    :param scaling_coef: a scaling coefficient
-    :param sinkhorn_eps: Sinkhorn parameter - epsilon
-    :param sinkhorn_l: Sinkhorn parameter - the number of iterations
-    :return: final Sinkhorn loss(and actual number of sinkhorn iterations for monitoring the training process)
-    '''
-    loss_xy = benchmark_sinkhorn(x, y, scaling_coef, sinkhorn_eps, sinkhorn_l)
-    loss_xx = benchmark_sinkhorn(x, x, scaling_coef, sinkhorn_eps, sinkhorn_l)
-    loss_yy = benchmark_sinkhorn(y, y, scaling_coef, sinkhorn_eps, sinkhorn_l)
-
-    loss = 2.0 * loss_xy - loss_xx - loss_yy
-
-    return loss, nitxy, nitxx
